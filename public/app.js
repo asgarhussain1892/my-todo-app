@@ -1,4 +1,3 @@
-public/app.js
 const form = document.getElementById('add-form');
 const input = document.getElementById('task-input');
 const list = document.getElementById('task-list');
