@@ -9,13 +9,25 @@
 <body>
   <main>
     <h1>To-Do List</h1>
-    <form id="add-form">
-      <input id="task-input" type="text" placeholder="What needs doing?" maxlength="500" autocomplete="off" required>
-      <button type="submit">Add</button>
-    </form>
     <p id="error" role="alert" hidden></p>
-    <ul id="task-list"></ul>
-    <p id="empty" hidden>Start adding your tasks</p>
+
+    <section id="login-view" hidden>
+      <p class="lead">Sign in to see and manage your tasks.</p>
+      <a class="google-btn" href="/auth/google">Sign in with Google</a>
+    </section>
+
+    <section id="app-view" hidden>
+      <div class="user-bar">
+        <span id="user-name"></span>
+        <button id="logout" type="button" class="secondary">Sign out</button>
+      </div>
+      <form id="add-form">
+        <input id="task-input" type="text" placeholder="What needs doing?" maxlength="500" autocomplete="off" required>
+        <button type="submit">Add</button>
+      </form>
+      <ul id="task-list"></ul>
+      <p id="empty" hidden>Start adding your tasks</p>
+    </section>
   </main>
   <script src="app.js"></script>
 </body>

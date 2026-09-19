@@ -65,3 +65,31 @@ li.done .text { text-decoration: line-through; color: #9ca3af; }
   background: #ef4444;
 }
 .delete:hover { background: #dc2626; }
+
+[hidden] { display: none !important; }
+
+.lead { color: #4b5563; }
+
+.google-btn {
+  display: inline-block;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #fff;
+  color: #111827;
+  text-decoration: none;
+}
+.google-btn:hover { background: #f9fafb; }
+
+.user-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  color: #4b5563;
+}
+
+button.secondary { background: #6b7280; padding: 0.35rem 0.7rem; font-size: 0.9rem; }
+button.secondary:hover { background: #4b5563; }

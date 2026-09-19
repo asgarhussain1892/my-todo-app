@@ -3,10 +3,25 @@ const input = document.getElementById('task-input');
 const list = document.getElementById('task-list');
 const empty = document.getElementById('empty');
 const errorBox = document.getElementById('error');
+const loginView = document.getElementById('login-view');
+const appView = document.getElementById('app-view');
+const userName = document.getElementById('user-name');
+const logoutBtn = document.getElementById('logout');
 
 function showError(message) {
   errorBox.textContent = message || '';
   errorBox.hidden = !message;
+}
+
+function showLogin() {
+  appView.hidden = true;
+  loginView.hidden = false;
+}
+
+function showApp(user) {
+  loginView.hidden = true;
+  appView.hidden = false;
+  userName.textContent = user.name || user.email || '';
 }
 
 async function api(path, options) {
@@ -14,6 +29,12 @@ async function api(path, options) {
     headers: { 'Content-Type': 'application/json' },
     ...options,
   });
+  if (res.status === 401) {
+    showLogin();
+    const err = new Error('Please sign in.');
+    err.unauthorized = true;
+    throw err;
+  }
   if (!res.ok) {
     let message = 'Request failed.';
     try { message = (await res.json()).error || message; } catch (_) {}
@@ -55,7 +76,7 @@ async function load() {
     render(await api('/api/tasks'));
     showError('');
   } catch (err) {
-    showError(err.message);
+    if (!err.unauthorized) showError(err.message);
   }
 }
 
@@ -64,7 +85,7 @@ async function toggle(id, done) {
     await api(`/api/tasks/${id}`, { method: 'PATCH', body: JSON.stringify({ done }) });
     showError('');
   } catch (err) {
-    showError(err.message);
+    if (!err.unauthorized) showError(err.message);
   }
   load();
 }
@@ -74,7 +95,7 @@ async function remove(id) {
     await api(`/api/tasks/${id}`, { method: 'DELETE' });
     showError('');
   } catch (err) {
-    showError(err.message);
+    if (!err.unauthorized) showError(err.message);
   }
   load();
 }
@@ -88,9 +109,29 @@ form.addEventListener('submit', async (e) => {
     input.value = '';
     showError('');
   } catch (err) {
-    showError(err.message);
+    if (!err.unauthorized) showError(err.message);
   }
   load();
 });
 
-load();
+logoutBtn.addEventListener('click', async () => {
+  try {
+    await api('/auth/logout', { method: 'POST' });
+  } catch (_) {}
+  list.innerHTML = '';
+  showLogin();
+});
+
+async function init() {
+  if (new URLSearchParams(location.search).get('login') === 'failed') {
+    showError('Google sign-in failed. Please try again.');
+  }
+  try {
+    showApp(await api('/api/me'));
+    load();
+  } catch (err) {
+    if (!err.unauthorized) showError(err.message);
+  }
+}
+
+init();
